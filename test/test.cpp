@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+#include "AVLTree.h"
 
 using namespace std;
 
@@ -47,4 +48,11 @@ TEST_CASE("Example BST Insert", "[flag]"){
 		REQUIRE(expectedOutput.size() == actualOutput.size());
 		REQUIRE(actualOutput == expectedOutput);
 	*/
+
+	AVLTree tree;   // Create a Tree object
+	tree.insert(nullptr, 3, "jay");
+	tree.insert(tree.getRoot(), 3, "shikha");
+	tree.insert(tree.getRoot(), 3, "seher");
+	tree.printLevelOrder(tree.getRoot());
+
 }

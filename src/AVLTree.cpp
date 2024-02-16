@@ -14,11 +14,19 @@ string Node::getName(){
     return name;
 }
 
+int Node::getHeight() {
+    return height;
+}
+
 Node* Node::getLeft() {
     return left;
 }
 Node* Node::getRight() {
     return right;
+}
+
+void Node::setHeight(int num) {
+    height = num;
 }
 
 void Node::setLeft(Node* childLeft) {
@@ -43,14 +51,14 @@ int AVLTree::getNodeCount() {
 }
 
 int AVLTree::findHeight(Node* root) {
-    if (!root) return 0;
+    if (root == nullptr) return 0;
     int left = findHeight(root->getLeft());
     int right = findHeight(root->getRight());
     return 1 + max(left, right);
 }
 
 int AVLTree::findBalanceFactor(Node* root) {
-    if (!root) return 0;
+    if (root == nullptr) return 0;
     return findHeight(root->getLeft()) - findHeight(root->getRight());
 }
 
@@ -70,58 +78,108 @@ Node* AVLTree::rotateRight(Node* tempNode) {
     return newParent;
 }
 Node* AVLTree::rotateRightLeft(Node* tempNode) {
-    Node* newChild = tempNode->getRight();
-    newChild = rotateRight(newChild);
+    cout << "right left\n";
+    tempNode->setRight(rotateRight(tempNode->getRight()));
     return rotateLeft(tempNode);
 }
 Node* AVLTree::rotateLeftRight(Node* tempNode) {
-    Node* newChild = tempNode->getLeft();
-    newChild = rotateLeft(newChild);
+    tempNode->setLeft(rotateLeft(tempNode->getLeft()));
     return rotateRight(tempNode);
 }
 
 Node* AVLTree::balanceTree(int id) {
-    int balNum = findBalanceFactor(root);
-    if (balNum > 1 && id < root->getLeft()->getUFid()) {
-        return rotateRight(root);
-    }
-    else if (balNum < -1 && id > root->getRight()->getUFid()) {
-        return rotateLeft(root);
-    }
-    else if (balNum > 1 && id > root->getLeft()->getUFid()) {
-        return rotateLeftRight(root);
-    }
-    else if (balNum < -1 && id < root->getRight()->getUFid()) {
-        return rotateRightLeft(root);
-    }
-    return getRoot();
-}
+    int balFactor = findBalanceFactor(root);
 
-Node* AVLTree::insert(Node* root, int id, string name) {
-    if (root == nullptr) {
-        nodeCount++;
-        return setRoot(new Node(id, name));
+    if (balFactor > 1) {
+        if (id < root->getLeft()->getUFid()) return rotateRight(root);
+        else return rotateLeftRight(root);
     }
-    else if (root->getUFid() > id) {
-        //cout << "left";
-        root->setLeft(insert(root->getLeft(), id, name));
-        //setRoot(balanceTree(id));
+    if (balFactor < -1) {
+        if (id > root->getRight()->getUFid()) return rotateLeft(root);
+        else return rotateRightLeft(root);
     }
-    else if(root->getUFid() < id) {
-        //cout << "right";
-        root->setRight(insert(root->getRight(), id, name));
-        //setRoot(balanceTree(id));
-    }
-    else cout << "unsuccesfull\n";
     return root;
 }
 
-void AVLTree::printLevelOrder(Node* root) {
+Node* AVLTree::insertHelper(Node* root, int id, string name) {
+    if (root == nullptr) {
+        nodeCount++;
+        return new Node(id, name);
+    }
+    else if (root->getUFid() > id) {
+        //cout << "left";
+        root->setLeft(insertHelper(root->getLeft(), id, name));
+        //cout << "helpme\n"; 
+        //return balanceTree(id);
+    }
+    else if(root->getUFid() < id) {
+        //cout << "right";
+        root->setRight(insertHelper(root->getRight(), id, name));
+        //cout << "help me\n";
+        //return balanceTree(id);
+    }
+    else cout << "unsuccesfull\n";
 
+    //balanceTree(id);
+
+    int balFactor = findBalanceFactor(root);
+
+    if (balFactor > 1) {
+        if (id < root->getLeft()->getUFid()) return rotateRight(root);
+        else return rotateLeftRight(root);
+    }
+    if (balFactor < -1) {
+        if (id > root->getRight()->getUFid()) return rotateLeft(root);
+        else return rotateRightLeft(root);
+    }
+
+    // Return head
+    return root;
+}
+
+void AVLTree::insert(int id, string name) {
+    setRoot(insertHelper(root, id, name));
+}
+
+void AVLTree::printLevelOrder(Node* root) {
     int h = findHeight(root);
     for (int level = 1; level <= h; level++) {
         printLevel(root, level);
     }
+}
+
+void AVLTree::printInorder(Node* root) {
+    // if (!root) {
+    //     cout << "-";
+    // } 
+    if (root) {
+        printInorder(root->getLeft());
+        cout << root->getUFid() << root->getName() << ", ";
+        printInorder(root->getRight());
+    }
+}
+void AVLTree::printPreorder(Node* root) {
+    /*if (!root) {
+        cout << "/";
+    }*/
+    if (root) {
+        cout << root->getUFid() << root->getName() << ", ";
+        printPreorder(root->getLeft());
+        printPreorder(root->getRight());
+    }
+}
+void AVLTree::printPostorder(Node* root) {
+    // if (!root) {
+    //     cout << "|";
+    // } 
+    if (root) {
+        printPostorder(root->getLeft());
+        printPostorder(root->getRight());
+        cout << root->getUFid() << root->getName() << ", ";
+    }
+}
+void AVLTree::printLevelCount(Node* root) {
+    cout << findHeight(root);
 }
 
 void AVLTree::printLevel(Node* root, int level) {

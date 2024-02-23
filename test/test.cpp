@@ -1,6 +1,11 @@
-#include <catch2/catch_test_macros.hpp>
+#include "catch/catch_amalgamated.hpp"
+#include "../src/AVLTree.h"
+#include "../src/parsing.h"
+#include "../src/main.cpp"
 #include <iostream>
-#include "AVLTree.h"
+
+// uncomment and replace the following with your own headers
+// #include "AVL.h"
 
 using namespace std;
 
@@ -38,15 +43,16 @@ TEST_CASE("Test 2", "[flag]"){
 // the provided test from the template is below.
 
 TEST_CASE("Example BST Insert", "[flag]"){
-	/*
-		MyAVLTree tree;   // Create a Tree object
-		tree.insert(3);
-		tree.insert(2);
-		tree.insert(1);
-		std::vector<int> actualOutput = tree.inorder();
-		std::vector<int> expectedOutput = {1, 2, 3};
-		REQUIRE(expectedOutput.size() == actualOutput.size());
-		REQUIRE(actualOutput == expectedOutput);
-	*/
-
+	
+		AVLTree tree;   // Create a Tree object
+		string cmd = "insert \"Jay Maisuria\" 00000001";
+		doFunctions(cmd, tree);
+		// tree.insert(3);
+		// tree.insert(2);
+		// tree.insert(1);
+		// std::vector<int> actualOutput = tree.inorder();
+		// std::vector<int> expectedOutput = {1, 2, 3};
+		// REQUIRE(expectedOutput.size() == actualOutput.size());
+		// REQUIRE(actualOutput == expectedOutput);
+	
 }

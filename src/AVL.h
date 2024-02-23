@@ -99,6 +99,8 @@ class AVL : private Node {
 
     public:
 
+        //int nodeCount;
+
         // AVL Tree Constructor
         AVL() : root(nullptr), nodeCount(0) {};
         Node* getRoot();

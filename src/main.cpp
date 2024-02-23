@@ -17,11 +17,11 @@ int main () {
 	int commandsNumber;
 	cin >> commandsNumber;
 
-    vector<string> commandsList = getInputs(commandsNumber);
+    vector<string> commandsList = getCommands(commandsNumber);
 
     for (int i = 0; i < commandsList.size(); i++) {
 
-        doFunctions(commandsList[i], tree);
+        parser(commandsList[i], tree);
     }
 
 	return 0;

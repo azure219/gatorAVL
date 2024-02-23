@@ -96,31 +96,34 @@ Node* AVL::rotateLeftRight(Node* temp) {
 // Insert Function Helper
 Node* AVL::insertHelper(Node* root, string name, int id) {
     
+    // Step 1: Insert Node
+
+    // If a null root is reached, insert a new node at root, increase nodeCount
     if (root == nullptr) {
 
         nodeCount++;
         return new Node(id, name);
     }
-    else if (id < root->getUFid()) {
+    // Else, the root is not null and a new node must be inserted either left or right of the root
+    else if (id < root->getUFid()) { // Insert left
 
-        //cout << "left";
         root->setLeft(insertHelper(root->getLeft(), name, id));
-        //cout << "helpme\n"; 
     }
-    else if (id > root->getUFid()) {
+    else if (id > root->getUFid()) { // Insert right
 
-        //cout << "right";
         root->setRight(insertHelper(root->getRight(), name, id));
-        //cout << "help me\n";
     }
     else {
   
         cout << "unsuccessful\n";
     }
 
+    // Step 2: Rebalance Tree
+
+    // Find balance factor of new tree
     int balFactor = returnBalanceFactor(root);
 
-    if (balFactor > 1) {
+    if (balFactor > 1) { // Tree is left heavy, perform appropriate rotations
 
         if (id < root->getLeft()->getUFid()) {
 
@@ -131,7 +134,7 @@ Node* AVL::insertHelper(Node* root, string name, int id) {
             return rotateLeftRight(root);
         }
     }
-    if (balFactor < -1) {
+    if (balFactor < -1) { // Tree is right heavy, perform appropriate rotations
 
         if (id > root->getRight()->getUFid()) {
          
@@ -154,19 +157,19 @@ Node* AVL::removeHelper(Node* node, int id) {
         cout << "unsuccessful\n";
         return nullptr;
     }
-    else if (id > node->getUFid()) {
+    else if (id > node->getUFid()) { // ID of Node to remove is greater than current node's ID, move right
 
         node->setRight(removeHelper(node->getRight(), id));
     }
-    else if (id < node->getUFid()) {
+    else if (id < node->getUFid()) { // ID of Node to remove is less than current node's ID, move left
 
         node->setLeft(removeHelper(node->getLeft(), id));
     }
-    else {
+    else { // At Node to remove
         // If Node Has No Children
         if (node->getLeft() == nullptr && node->getRight() == nullptr) {
 
-            nodeCount--;
+            //nodeCount--;
             delete node;
             cout << "successful\n";
             node = nullptr;
@@ -178,7 +181,7 @@ Node* AVL::removeHelper(Node* node, int id) {
 
             Node* temp = node;
             node = node->getRight();
-            nodeCount--;
+            //nodeCount--;
             delete temp;
             cout << "successful\n";
 
@@ -189,7 +192,7 @@ Node* AVL::removeHelper(Node* node, int id) {
 
             Node* temp = node;
             node = node->getLeft();
-            nodeCount--;
+            //nodeCount--;
             delete temp;
             cout << "successful\n";
 
@@ -241,6 +244,11 @@ Node* AVL::searchIDHelper(Node* root, int id) {
 
     Node* temp = nullptr;
 
+    if (nodeCount == 0) {
+
+        return nullptr;
+    }
+
     if (root == nullptr) {
 
         return temp;
@@ -248,7 +256,6 @@ Node* AVL::searchIDHelper(Node* root, int id) {
     else if (root->getUFid() == id) {
 
         temp = root;
-        //cout << "equals\n" << name << "\n";
         return temp;
     }
     else if (root->getUFid() > id) {
@@ -287,7 +294,7 @@ void AVL::insert(string name, int id) {
 
     // Remove ID Function
 void AVL::removeID(int id) {
-
+    nodeCount--;
     root = removeHelper(root, id);
 }
 
@@ -320,6 +327,7 @@ void AVL::searchID(int id) {
     if (name == nullptr) {
 
         cout << "unsuccessful\n";
+        return;
     }
     else {
         
@@ -336,12 +344,13 @@ void AVL::searchName(string name) {
     if (ids.empty()) {
 
         cout << "unsuccessful\n";
+        return;
     }
 
     for (int i = 0; i < ids.size(); i++) {
 
         // changed to .at(i)
-        cout << ids.at(i) << "\n";
+        cout << ids[i] << "\n";
     }
 }
 
@@ -389,8 +398,9 @@ void AVL::printOrder() {
         printNode(allNodes.at(i), ", ");
     }
 
-    printNode(allNodes.at(allNodes.size() - 1), " ");
+    printNode(allNodes.at(allNodes.size() - 1), "");
 
+    cout << "\n";
     allNodes.clear();
 }
 
@@ -435,7 +445,7 @@ void AVL::printPostorder(Node* root) {
 }
 void AVL::printLevelCount(Node* root) {
 
-    cout << "\n" << returnHeight(root);
+    cout << returnHeight(root) << "\n";
 }
 
 // AVL Tree Deconstructor Function
